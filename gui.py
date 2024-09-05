@@ -7,5 +7,6 @@ add_button = fsg.Button("ADD")
 
 window = fsg.Window("To-do App", layout=[[label], [input_box, add_button]])
 window.read()
+# program stops in windows.read(), only after closing next lines will execute
 print("Window is closed")
 window.close()
