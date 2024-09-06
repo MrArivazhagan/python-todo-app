@@ -1,24 +1,27 @@
 import functions
 import FreeSimpleGUI as fsg
 import time
+import os
+
+
+# this will create todos file, if not present (for application users).
+if not os.path.exists('todos.txt'):
+    with open('todos.txt', 'w') as file:
+        pass
 
 fsg.theme('Black')
 
-clock = fsg.Text('', key="clock")
+clock = fsg.Text(key="clock")
 
 label = fsg.Text("Type in a to-do")
 input_box = fsg.InputText(tooltip="Enter todo", key="todo")
-add_button = fsg.Button(image_source='add.png', size=10,
-                        mouseover_colors='blue', tooltip='Add Todo',
-                        key='Add')
+add_button = fsg.Button('Add')
 
 todos_list = fsg.Listbox(values=functions.get_todos(), key="todos",
                          size=(45, 10), enable_events=True)
 edit_button = fsg.Button("Edit")
 
-complete_button = fsg.Button(image_source='complete.png', size=(20, 10),
-                             mouseover_colors='blue', tooltip='Complete Todo',
-                             key='Complete')
+complete_button = fsg.Button('Complete')
 exit_button = fsg.Button("Exit")
 
 window = fsg.Window("To-do App",
@@ -32,8 +35,12 @@ window = fsg.Window("To-do App",
 while True:
     # we put timeout to update the time in milliseconds
     event, values = window.read(timeout=100)
-    print(event, values, sep="\n")
-    window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
+
+    # if event == fsg.WIN_CLOSED:
+    #     break
+    # window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
+    # print(event, values, sep="\n")
+
     match event:
         case "Add":
             todos = functions.get_todos()
@@ -65,12 +72,12 @@ while True:
                 window["todo"].update(value="")
             except IndexError:
                 fsg.popup("Please Select a todo first", font=('Helvetica', 20))
-        case "Exit":
+        case "Exit" | fsg.WIN_CLOSED:
             break
         case "todos":
             window["todo"].update(value=values["todos"][0].strip("\n"))
+        case _:
+            window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
         # the close button click
-        case fsg.WIN_CLOSED:
-            break
 
 window.close()
