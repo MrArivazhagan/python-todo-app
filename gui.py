@@ -8,13 +8,17 @@ clock = fsg.Text('', key="clock")
 
 label = fsg.Text("Type in a to-do")
 input_box = fsg.InputText(tooltip="Enter todo", key="todo")
-add_button = fsg.Button("Add")
+add_button = fsg.Button(image_source='add.png', size=10,
+                        mouseover_colors='blue', tooltip='Add Todo',
+                        key='Add')
 
 todos_list = fsg.Listbox(values=functions.get_todos(), key="todos",
                          size=(45, 10), enable_events=True)
 edit_button = fsg.Button("Edit")
 
-complete_button = fsg.Button("Complete")
+complete_button = fsg.Button(image_source='complete.png', size=(20, 10),
+                             mouseover_colors='blue', tooltip='Complete Todo',
+                             key='Complete')
 exit_button = fsg.Button("Exit")
 
 window = fsg.Window("To-do App",
@@ -33,7 +37,10 @@ while True:
     match event:
         case "Add":
             todos = functions.get_todos()
-            todos.append(values["todo"] + "\n")
+            add_todo = values["todo"]
+            if len(add_todo) == 0:
+                continue
+            todos.append(add_todo + "\n")
             functions.write_todos(todos)
             window["todos"].update(values=functions.get_todos())
         case "Edit":
