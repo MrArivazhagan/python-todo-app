@@ -7,6 +7,7 @@ def get_todos(filepath=FILEPATH):
     """
     with open(filepath, "r") as file:
         local_todos = file.readlines()
+
     return local_todos
 
 
@@ -20,4 +21,4 @@ def write_todos(todos_list, filepath=FILEPATH):
 
 # print("running the file due to import")
 if __name__ == "__main__":
-    print("User wants to run this file")
+    print(get_todos())
