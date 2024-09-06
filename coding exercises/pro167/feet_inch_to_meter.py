@@ -1,7 +1,7 @@
 import FreeSimpleGUI as fsg
 import convertor
 
-label_text = fsg.Text("Convertor")
+fsg.theme("Black")
 
 feet_label = fsg.Text("Enter feet ")
 feet_input_box = fsg.Input(key="feet")
@@ -10,6 +10,7 @@ inch_label = fsg.Text("Enter inches ")
 inch_input_box = fsg.Input(key="inches")
 
 convert_button = fsg.Button("convert", key="convert")
+exit_button = fsg.Button("Exit", key='exit')
 output_text = fsg.Text(key="result")
 
 left_column_content = [[feet_label],
@@ -18,7 +19,7 @@ left_column_content = [[feet_label],
 
 right_column_content = [[feet_input_box],
                         [inch_input_box],
-                        [output_text]]
+                        [exit_button, output_text]]
 
 left_column = fsg.Column(layout=left_column_content)
 right_column = fsg.Column(layout=right_column_content)
@@ -32,11 +33,14 @@ while True:
     print(event, values, sep='\n')
     match event:
         case "convert":
-            feet = float(values["feet"])
-            inches = float(values["inches"])
-            meters = convertor.convert(feet, inches)
-            window['result'].update(value=f"{meters} m")
-        case fsg.WIN_CLOSED:
+            try:
+                feet = float(values["feet"])
+                inches = float(values["inches"])
+                meters = convertor.convert(feet, inches)
+                window['result'].update(value=f"{meters:.5f} m")
+            except ValueError:
+                fsg.popup("Enter both Feet and Inches values")
+        case "exit" | fsg.WIN_CLOSED:
             break
 
 window.close()
